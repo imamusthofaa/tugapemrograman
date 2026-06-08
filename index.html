@@ -30,7 +30,6 @@
             min-height: 100vh;
         }
 
-        /* Header */
         header {
             background: linear-gradient(135deg, var(--primary) 0%, var(--dark) 100%);
             color: var(--white);
@@ -66,7 +65,6 @@
             z-index: 1;
         }
 
-        /* Controls Section */
         .controls {
             max-width: 1200px;
             margin: -2rem auto 2rem;
@@ -168,7 +166,6 @@
             border-color: var(--primary);
         }
 
-        /* Stats Bar */
         .stats-bar {
             max-width: 1200px;
             margin: 0 auto 1.5rem;
@@ -185,28 +182,24 @@
             font-weight: bold;
         }
 
-        /* Content Grid */
         .container {
             max-width: 1200px;
             margin: 0 auto;
             padding: 0 1rem 3rem;
         }
 
-        /* Grid View */
         .grid-view {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
             gap: 1.5rem;
         }
 
-        /* List View */
         .list-view {
             display: flex;
             flex-direction: column;
             gap: 1rem;
         }
 
-        /* Card Styles */
         .card {
             background: var(--white);
             border-radius: 16px;
@@ -226,6 +219,7 @@
             position: relative;
             height: 220px;
             overflow: hidden;
+            background: #f0f0f0;
         }
 
         .card-image img {
@@ -341,7 +335,6 @@
             font-weight: 600;
         }
 
-        /* List View Card Modification */
         .list-view .card {
             display: flex;
             flex-direction: row;
@@ -365,7 +358,6 @@
             -webkit-line-clamp: 3;
         }
 
-        /* Detail Modal */
         .modal-overlay {
             display: none;
             position: fixed;
@@ -397,14 +389,8 @@
         }
 
         @keyframes modalSlide {
-            from {
-                opacity: 0;
-                transform: translateY(-30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .modal-close {
@@ -534,7 +520,6 @@
             color: white;
         }
 
-        /* No Results */
         .no-results {
             text-align: center;
             padding: 3rem;
@@ -547,7 +532,6 @@
             margin-bottom: 1rem;
         }
 
-        /* Footer */
         footer {
             background: var(--dark);
             color: var(--white);
@@ -556,7 +540,6 @@
             margin-top: 2rem;
         }
 
-        /* Animations */
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
@@ -566,102 +549,34 @@
             animation: fadeIn 0.5s ease forwards;
         }
 
-        /* Responsive */
         @media (max-width: 768px) {
-            header h1 {
-                font-size: 1.8rem;
-            }
-
-            .controls-inner {
-                flex-direction: column;
-            }
-
-            .search-box {
-                width: 100%;
-            }
-
-            .view-toggle {
-                margin-left: 0;
-                width: 100%;
-                justify-content: center;
-            }
-
-            .grid-view {
-                grid-template-columns: 1fr;
-            }
-
-            .list-view .card {
-                flex-direction: column;
-                height: auto;
-            }
-
-            .list-view .card-image {
-                width: 100%;
-                height: 200px;
-            }
-
-            .modal-image {
-                height: 200px;
-            }
-
-            .modal-content {
-                padding: 1.5rem;
-            }
-
-            .modal-title {
-                font-size: 1.4rem;
-            }
-
-            .modal-actions {
-                flex-direction: column;
-            }
-
-            .btn-primary, .btn-secondary {
-                width: 100%;
-            }
+            header h1 { font-size: 1.8rem; }
+            .controls-inner { flex-direction: column; }
+            .search-box { width: 100%; }
+            .view-toggle { margin-left: 0; width: 100%; justify-content: center; }
+            .grid-view { grid-template-columns: 1fr; }
+            .list-view .card { flex-direction: column; height: auto; }
+            .list-view .card-image { width: 100%; height: 200px; }
+            .modal-image { height: 200px; }
+            .modal-content { padding: 1.5rem; }
+            .modal-title { font-size: 1.4rem; }
+            .modal-actions { flex-direction: column; }
+            .btn-primary, .btn-secondary { width: 100%; }
         }
 
-        /* Loading Skeleton */
-        .skeleton {
-            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
-            background-size: 200% 100%;
-            animation: shimmer 1.5s infinite;
-            border-radius: 8px;
-        }
-
-        @keyframes shimmer {
-            0% { background-position: 200% 0; }
-            100% { background-position: -200% 0; }
-        }
-
-        /* Scrollbar */
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-
-        ::-webkit-scrollbar-track {
-            background: #f1f1f1;
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: var(--secondary);
-            border-radius: 4px;
-        }
-
-        ::-webkit-scrollbar-thumb:hover {
-            background: var(--primary);
-        }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; }
+        ::-webkit-scrollbar-thumb { background: var(--secondary); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--primary); }
     </style>
 </head>
 <body>
 
-    <!-- Header -->
     <header>
         <h1><i class="fas fa-mountain"></i> WisataNusantara</h1>
         <p>Temukan keindahan tersembunyi di seluruh penjuru Indonesia</p>
     </header>
 
-    <!-- Controls -->
     <div class="controls">
         <div class="controls-inner">
             <div class="search-box">
@@ -686,18 +601,15 @@
         </div>
     </div>
 
-    <!-- Stats -->
     <div class="stats-bar">
         <div>Menampilkan <span id="itemCount">0</span> destinasi wisata</div>
         <div id="activeFilter">Kategori: Semua</div>
     </div>
 
-    <!-- Content -->
     <div class="container">
         <div id="wisataList" class="grid-view"></div>
     </div>
 
-    <!-- Modal -->
     <div class="modal-overlay" id="modalOverlay">
         <div class="modal" id="modal">
             <button class="modal-close" id="modalClose"><i class="fas fa-times"></i></button>
@@ -721,13 +633,12 @@
         </div>
     </div>
 
-    <!-- Footer -->
     <footer>
-        <p><i class="fas fa-heart" style="color: #ff6b6b;"></i> Dibuat dengan cinta untuk NIM 127 | WisataNusantara 2024</p>
+        <p><i class="fas fa-heart" style="color: #ff6b6b;"></i> Dibuat dengan cinta untuk NIM 127 | WisataNusantara 2026</p>
     </footer>
 
     <script>
-        // Data Wisata (Static JSON)
+        // Data Wisata - GAMBAR SUDAH DIPERBARUI
         const wisataData = [
             {
                 id: 1,
@@ -737,7 +648,7 @@
                 harga: 3500000,
                 rating: 4.9,
                 deskripsi: "Surga bawah laut Indonesia dengan keanekaragaman hayati terbesar di dunia. Terdiri dari 4 pulau utama: Waigeo, Misool, Salawati, dan Batanta. Spot diving terbaik dengan terumbu karang yang masih alami.",
-                gambar: "https://images.unsplash.com/photo-1516690561799-46d8f74f9abf?w=800",
+                gambar: "https://images.unsplash.com/photo-1516690561799-46d8f74f9abf?w=800&q=80",
                 fasilitas: ["Diving", "Snorkeling", "Resort", "Guide Lokal"],
                 jam: "08:00 - 17:00",
                 suhu: "24°C - 30°C"
@@ -750,7 +661,7 @@
                 harga: 75000,
                 rating: 4.8,
                 deskripsi: "Candi Buddha terbesar di dunia yang dibangun pada abad ke-8. Memiliki 2.672 panel relief dan 504 arca Buddha. Situs Warisan Dunia UNESCO yang wajib dikunjungi saat sunrise.",
-                gambar: "https://images.unsplash.com/photo-1596401057633-54c8c7b76b4c?w=800",
+                gambar: "https://images.unsplash.com/photo-1544640808-32ca72ac7f37?w=800&q=80",
                 fasilitas: ["Museum", "Audio Guide", "Shuttle", "Restoran"],
                 jam: "06:00 - 17:00",
                 suhu: "20°C - 32°C"
@@ -763,7 +674,7 @@
                 harga: 220000,
                 rating: 4.7,
                 deskripsi: "Gunung berapi aktif yang terkenal dengan pemandangan matahari terbitnya. Kaldera Tengger yang luas menciptakan lanskap seperti di planet Mars. Pengalaman jeep tour yang ikonik.",
-                gambar: "https://images.unsplash.com/photo-1505995433366-e12047f3f144?w=800",
+                gambar: "https://images.unsplash.com/photo-1505995433366-e12047f3f144?w=800&q=80",
                 fasilitas: ["Jeep Tour", "Penginapan", "Camping", "Kuda"],
                 jam: "03:00 - 12:00",
                 suhu: "5°C - 15°C"
@@ -776,7 +687,7 @@
                 harga: 1500000,
                 rating: 4.8,
                 deskripsi: "Gerbang menuju Taman Nasional Komodo. Pulau-pulau eksotis dengan pantai pink yang langka. Spot snorkeling dengan manta rays dan spot diving dunia.",
-                gambar: "https://images.unsplash.com/photo-1555400038-63f5ba517a47?w=800",
+                gambar: "https://images.unsplash.com/photo-1555400038-63f5ba517a47?w=800&q=80",
                 fasilitas: ["Liveaboard", "Diving", "Island Hopping", "Resort"],
                 jam: "07:00 - 18:00",
                 suhu: "25°C - 33°C"
@@ -789,7 +700,7 @@
                 harga: 25000,
                 rating: 4.6,
                 deskripsi: "Terasering sawah yang ikonik dengan sistem irigasi subak tradisional. Pemandangan hijau yang menenangkan dengan swing spot Instagramable. Pengalaman budaya Bali yang autentik.",
-                gambar: "https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=800",
+                gambar: "https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=800&q=80",
                 fasilitas: ["Swing", "Trekking", "Kopi Luwak", "Souvenir"],
                 jam: "08:00 - 18:00",
                 suhu: "22°C - 28°C"
@@ -802,7 +713,7 @@
                 harga: 150000,
                 rating: 4.7,
                 deskripsi: "Gunung berapi dengan fenomena api biru (blue fire) yang langka di dunia. Danau kawah berwarna toska dengan asap belerang yang ikonik. Trekking malam hari yang menantang.",
-                gambar: "https://images.unsplash.com/photo-1588668214407-6ea9a6d8c272?w=800",
+                gambar: "https://images.unsplash.com/photo-1588668214407-6ea9a6d8c272?w=800&q=80",
                 fasilitas: ["Guide", "Masker", "Trekking", "Kamera"],
                 jam: "00:00 - 08:00",
                 suhu: "8°C - 18°C"
@@ -815,7 +726,7 @@
                 harga: 50000,
                 rating: 4.7,
                 deskripsi: "Kompleks candi Hindu terbesar di Indonesia. Dibangun pada abad ke-9 dengan arsitektur tinggi dan relief Ramayana yang megah. Pertunjukan ballet Ramayana di malam hari.",
-                gambar: "https://images.unsplash.com/photo-1604994182128-56db4e845dfa?w=800",
+                gambar: "https://images.unsplash.com/photo-1596401057633-54c8c7b76b4c?w=800&q=80",
                 fasilitas: ["Museum", "Teater", "Audio Guide", "Restoran"],
                 jam: "06:00 - 17:00",
                 suhu: "21°C - 33°C"
@@ -828,7 +739,7 @@
                 harga: 1200000,
                 rating: 4.6,
                 deskripsi: "Surga snorkeling dengan penyu hijau dan penyu sisik. Danau ubur-ubur yang aman di Pulau Kakaban. Spot diving dengan visibility tinggi dan terumbu karang sehat.",
-                gambar: "https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=800",
+                gambar: "https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=800&q=80",
                 fasilitas: ["Snorkeling", "Diving", "Resort", "Boat"],
                 jam: "08:00 - 17:00",
                 suhu: "26°C - 32°C"
@@ -841,7 +752,7 @@
                 harga: 200000,
                 rating: 4.8,
                 deskripsi: "Taman nasional laut dengan dinding karang vertikal (wall diving) terbaik. Keanekaragaman biota laut tinggi dengan 390 spesies karang. Spot diving favorit dunia.",
-                gambar: "https://images.unsplash.com/photo-1582967788606-a171f1080ca8?w=800",
+                gambar: "https://images.unsplash.com/photo-1582967788606-a171f1080ca8?w=800&q=80",
                 fasilitas: ["Diving", "Snorkeling", "Boat", "Guide"],
                 jam: "07:00 - 17:00",
                 suhu: "25°C - 31°C"
@@ -864,12 +775,10 @@
         const modalOverlay = document.getElementById('modalOverlay');
         const modalClose = document.getElementById('modalClose');
 
-        // Format Rupiah
         const formatRupiah = (harga) => {
             return 'Rp ' + harga.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
         };
 
-        // Render Cards
         const renderWisata = () => {
             let filtered = wisataData.filter(item => {
                 const matchSearch = item.nama.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -895,7 +804,7 @@
             wisataList.innerHTML = filtered.map((item, index) => `
                 <div class="card" onclick="openModal(${item.id})" style="animation-delay: ${index * 0.1}s">
                     <div class="card-image">
-                        <img src="${item.gambar}" alt="${item.nama}" loading="lazy">
+                        <img src="${item.gambar}" alt="${item.nama}" loading="lazy" onerror="this.src='https://via.placeholder.com/800x500?text=${encodeURIComponent(item.nama)}'">
                         <span class="card-badge">${item.kategori}</span>
                         <button class="card-favorite ${favorites.has(item.id) ? 'liked' : ''}" 
                                 onclick="event.stopPropagation(); toggleFavorite(${item.id})">
@@ -921,7 +830,6 @@
             `).join('');
         };
 
-        // Toggle Favorite
         const toggleFavorite = (id) => {
             if (favorites.has(id)) {
                 favorites.delete(id);
@@ -931,7 +839,6 @@
             renderWisata();
         };
 
-        // Open Modal
         const openModal = (id) => {
             const item = wisataData.find(w => w.id === id);
             if (!item) return;
@@ -958,13 +865,11 @@
             document.body.style.overflow = 'hidden';
         };
 
-        // Close Modal
         const closeModal = () => {
             modalOverlay.classList.remove('active');
             document.body.style.overflow = '';
         };
 
-        // Event Listeners
         searchInput.addEventListener('input', (e) => {
             searchQuery = e.target.value;
             renderWisata();
@@ -1010,12 +915,10 @@
             }
         });
 
-        // Keyboard shortcuts
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') closeModal();
         });
 
-        // Initial Render
         renderWisata();
     </script>
 
