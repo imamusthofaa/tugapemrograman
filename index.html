@@ -27,7 +27,6 @@
             min-height: 100vh;
         }
 
-        /* Header */
         header {
             background: linear-gradient(135deg, var(--primary) 0%, var(--dark) 100%);
             color: var(--white);
@@ -48,7 +47,6 @@
         header h1 { font-size: 2.5rem; margin-bottom: 0.5rem; position: relative; z-index: 1; }
         header p { font-size: 1.1rem; opacity: 0.9; position: relative; z-index: 1; }
 
-        /* Controls */
         .controls {
             max-width: 1200px;
             margin: -2rem auto 2rem;
@@ -128,7 +126,6 @@
         }
         .view-btn:hover, .view-btn.active { background: var(--primary); color: var(--white); border-color: var(--primary); }
 
-        /* Stats */
         .stats-bar {
             max-width: 1200px;
             margin: 0 auto 1.5rem;
@@ -154,28 +151,24 @@
         .api-status.online { background: #d4edda; color: #155724; }
         .api-status.offline { background: #f8d7da; color: #721c24; }
 
-        /* Container */
         .container {
             max-width: 1200px;
             margin: 0 auto;
             padding: 0 1rem 3rem;
         }
 
-        /* Grid View */
         .grid-view {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
             gap: 1.5rem;
         }
 
-        /* List View */
         .list-view {
             display: flex;
             flex-direction: column;
             gap: 1rem;
         }
 
-        /* Card */
         .card {
             background: var(--white);
             border-radius: 16px;
@@ -299,7 +292,6 @@
             font-weight: 600;
         }
 
-        /* List View Card */
         .list-view .card {
             display: flex;
             flex-direction: row;
@@ -318,7 +310,6 @@
         }
         .list-view .card-description { -webkit-line-clamp: 3; }
 
-        /* Loading Skeleton */
         .loading-skeleton {
             background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
             background-size: 200% 100%;
@@ -331,7 +322,6 @@
             100% { background-position: -200% 0; }
         }
 
-        /* Error Toast */
         .error-toast {
             position: fixed;
             bottom: 2rem;
@@ -353,7 +343,6 @@
             to { transform: translateX(0); opacity: 1; }
         }
 
-        /* Modal */
         .modal-overlay {
             display: none;
             position: fixed;
@@ -470,7 +459,6 @@
         }
         .btn-secondary:hover { background: var(--secondary); color: white; }
 
-        /* No Results */
         .no-results {
             text-align: center;
             padding: 3rem;
@@ -479,7 +467,6 @@
         }
         .no-results i { font-size: 4rem; color: #ddd; margin-bottom: 1rem; }
 
-        /* Footer */
         footer {
             background: var(--dark);
             color: var(--white);
@@ -488,19 +475,16 @@
             margin-top: 2rem;
         }
 
-        /* Animations */
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* Scrollbar */
         ::-webkit-scrollbar { width: 8px; }
         ::-webkit-scrollbar-track { background: #f1f1f1; }
         ::-webkit-scrollbar-thumb { background: var(--secondary); border-radius: 4px; }
         ::-webkit-scrollbar-thumb:hover { background: var(--primary); }
 
-        /* Responsive */
         @media (max-width: 768px) {
             header h1 { font-size: 1.8rem; }
             .controls-inner { flex-direction: column; }
@@ -520,13 +504,11 @@
 </head>
 <body>
 
-    <!-- Header -->
     <header>
         <h1><i class="fas fa-mountain"></i> WisataNusantara</h1>
         <p>Temukan keindahan tersembunyi di seluruh penjuru Indonesia</p>
     </header>
 
-    <!-- Controls -->
     <div class="controls">
         <div class="controls-inner">
             <div class="search-box">
@@ -551,7 +533,6 @@
         </div>
     </div>
 
-    <!-- Stats -->
     <div class="stats-bar">
         <div>Menampilkan <span id="itemCount">0</span> destinasi wisata</div>
         <div id="activeFilter">Kategori: Semua</div>
@@ -560,7 +541,6 @@
         </div>
     </div>
 
-    <!-- Content -->
     <div class="container">
         <div id="wisataList" class="grid-view">
             <div class="loading-skeleton"></div>
@@ -569,7 +549,6 @@
         </div>
     </div>
 
-    <!-- Modal -->
     <div class="modal-overlay" id="modalOverlay">
         <div class="modal" id="modal">
             <button class="modal-close" id="modalClose"><i class="fas fa-times"></i></button>
@@ -593,13 +572,11 @@
         </div>
     </div>
 
-    <!-- Error Toast -->
     <div class="error-toast" id="errorToast">
         <i class="fas fa-exclamation-circle"></i>
         <span id="errorMessage">Terjadi kesalahan</span>
     </div>
 
-    <!-- Footer -->
     <footer>
         <p><i class="fas fa-heart" style="color: #ff6b6b;"></i> Dibuat dengan cinta untuk NIM 127 | WisataNusantara 2026</p>
     </footer>
@@ -740,33 +717,65 @@
         // ============================================
         // 2. FETCH API PUBLIC - NILAI 90
         // ============================================
-        // Menggunakan JSONPlaceholder (API public gratis & stabil)
+        // Menggunakan JSONPlaceholder + Transformasi ke Bahasa Indonesia
         const API_URL = 'https://jsonplaceholder.typicode.com/posts?_limit=3';
 
-        const transformApiData = (apiPosts) => {
-            const kategoriMap = ['Pantai', 'Gunung', 'Budaya'];
-            const lokasiMap = ['Bali', 'Lombok', 'Sumatera Barat'];
-            const hargaMap = [150000, 350000, 50000];
-            const gambarMap = [
-                'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800&q=80',
-                'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800&q=80',
-                'https://images.unsplash.com/photo-1528127269322-539801943592?w=800&q=80'
-            ];
+        // Data template wisata Indonesia untuk transformasi API
+        const apiWisataTemplate = [
+            {
+                nama: "Pantai Kuta Bali",
+                lokasi: "Badung, Bali",
+                kategori: "Pantai",
+                harga: 0,
+                deskripsi: "Pantai ikonik Bali yang terkenal dengan ombaknya yang cocok untuk surfing. Sunset di Pantai Kuta menjadi daya tarik utama wisatawan dari seluruh dunia. Area sekitar dipenuhi dengan restoran, kafe, dan toko souvenir.",
+                gambar: "https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=800&q=80",
+                fasilitas: ["Surfing", "Sunset View", "Kafe", "Souvenir"],
+                jam: "06:00 - 18:00",
+                suhu: "26°C - 32°C"
+            },
+            {
+                nama: "Gunung Rinjani",
+                lokasi: "Lombok, Nusa Tenggara Barat",
+                kategori: "Gunung",
+                harga: 250000,
+                deskripsi: "Gunung berapi tertinggi kedua di Indonesia dengan ketinggian 3.726 meter mdpl. Danau Segara Anak yang berada di kaldera menjadi daya tarik utama. Trekking menuju puncak menawarkan pemandangan spektakuler.",
+                gambar: "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800&q=80",
+                fasilitas: ["Trekking", "Camping", "Pemandian Air Panas", "Guide"],
+                jam: "06:00 - 18:00",
+                suhu: "10°C - 25°C"
+            },
+            {
+                nama: "Museum Fatahillah",
+                lokasi: "Jakarta Barat, DKI Jakarta",
+                kategori: "Budaya",
+                harga: 5000,
+                deskripsi: "Museum Sejarah Jakarta yang berada di kawasan Kota Tua. Bangunan berarsitektur kolonial Belanda yang megah. Menyimpan koleksi sejarah Jakarta dari masa prasejarah hingga era modern.",
+                gambar: "https://images.unsplash.com/photo-1528127269322-539801943592?w=800&q=80",
+                fasilitas: ["Museum", "Area Foto", "Kafe", "Guide"],
+                jam: "09:00 - 15:00",
+                suhu: "25°C - 33°C"
+            }
+        ];
 
-            return apiPosts.map((post, index) => ({
-                id: post.id + 100,
-                nama: post.title.split(' ').slice(0, 4).join(' '),
-                lokasi: lokasiMap[index % 3],
-                kategori: kategoriMap[index % 3],
-                harga: hargaMap[index % 3],
-                rating: (4.0 + Math.random() * 1.0).toFixed(1),
-                deskripsi: post.body,
-                gambar: gambarMap[index % 3],
-                fasilitas: ["Toilet", "Parkir", "Mushola", "Warung"],
-                jam: "08:00 - 17:00",
-                suhu: "22°C - 30°C",
-                source: "api"
-            }));
+        // Transformasi data API ke format wisata Indonesia
+        const transformApiData = (apiPosts) => {
+            return apiPosts.map((post, index) => {
+                const template = apiWisataTemplate[index % apiWisataTemplate.length];
+                return {
+                    id: post.id + 100,
+                    nama: template.nama,
+                    lokasi: template.lokasi,
+                    kategori: template.kategori,
+                    harga: template.harga,
+                    rating: (4.0 + Math.random() * 1.0).toFixed(1),
+                    deskripsi: template.deskripsi,
+                    gambar: template.gambar,
+                    fasilitas: template.fasilitas,
+                    jam: template.jam,
+                    suhu: template.suhu,
+                    source: "api"
+                };
+            });
         };
 
         // ============================================
@@ -794,7 +803,7 @@
         // 4. FUNGSI RENDER
         // ============================================
         const formatRupiah = (harga) => {
-            return 'Rp ' + harga.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+            return harga === 0 ? 'Gratis' : 'Rp ' + harga.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
         };
 
         const showError = (message) => {
@@ -850,7 +859,7 @@
                         <p class="card-description">${item.deskripsi}</p>
                         <div class="card-footer">
                             <div class="card-price">
-                                ${formatRupiah(item.harga)} <span>/orang</span>
+                                ${formatRupiah(item.harga)} <span>${item.harga > 0 ? '/orang' : ''}</span>
                             </div>
                             <div class="card-rating">
                                 <i class="fas fa-star"></i> ${item.rating}
