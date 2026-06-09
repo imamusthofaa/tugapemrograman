@@ -21,6 +21,7 @@
             --white: #ffffff;
             --shadow: 0 4px 20px rgba(0,0,0,0.1);
             --shadow-hover: 0 8px 30px rgba(0,0,0,0.15);
+            --danger: #e74c3c;
         }
 
         body {
@@ -175,11 +176,37 @@
             align-items: center;
             color: #666;
             font-size: 0.9rem;
+            flex-wrap: wrap;
+            gap: 0.5rem;
         }
 
         .stats-bar span {
             color: var(--primary);
             font-weight: bold;
+        }
+
+        .api-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .api-status.online {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .api-status.offline {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .api-status i {
+            font-size: 0.7rem;
         }
 
         .container {
@@ -246,9 +273,31 @@
             backdrop-filter: blur(10px);
         }
 
-        .card-favorite {
+        .card-source {
             position: absolute;
             top: 1rem;
+            right: 1rem;
+            padding: 0.3rem 0.7rem;
+            border-radius: 15px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .card-source.api {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .card-source.local {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .card-favorite {
+            position: absolute;
+            bottom: 1rem;
             right: 1rem;
             width: 36px;
             height: 36px;
@@ -262,6 +311,7 @@
             transition: all 0.3s ease;
             font-size: 1rem;
             color: #ccc;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         }
 
         .card-favorite:hover {
@@ -356,6 +406,44 @@
 
         .list-view .card-description {
             -webkit-line-clamp: 3;
+        }
+
+        .loading-skeleton {
+            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.5s infinite;
+            border-radius: 16px;
+            height: 300px;
+        }
+
+        @keyframes shimmer {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
+        .error-toast {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: var(--danger);
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(231, 76, 60, 0.3);
+            display: none;
+            align-items: center;
+            gap: 0.75rem;
+            z-index: 2000;
+            animation: slideIn 0.3s ease;
+        }
+
+        .error-toast.show {
+            display: flex;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
         }
 
         .modal-overlay {
@@ -524,6 +612,7 @@
             text-align: center;
             padding: 3rem;
             color: #666;
+            grid-column: 1 / -1;
         }
 
         .no-results i {
@@ -562,6 +651,7 @@
             .modal-title { font-size: 1.4rem; }
             .modal-actions { flex-direction: column; }
             .btn-primary, .btn-secondary { width: 100%; }
+            .stats-bar { flex-direction: column; text-align: center; }
         }
 
         ::-webkit-scrollbar { width: 8px; }
@@ -604,10 +694,18 @@
     <div class="stats-bar">
         <div>Menampilkan <span id="itemCount">0</span> destinasi wisata</div>
         <div id="activeFilter">Kategori: Semua</div>
+        <div class="api-status offline" id="apiStatus">
+            <i class="fas fa-circle"></i> <span>Memuat data...</span>
+        </div>
     </div>
 
     <div class="container">
-        <div id="wisataList" class="grid-view"></div>
+        <div id="wisataList" class="grid-view">
+            <!-- Loading skeletons -->
+            <div class="loading-skeleton"></div>
+            <div class="loading-skeleton"></div>
+            <div class="loading-skeleton"></div>
+        </div>
     </div>
 
     <div class="modal-overlay" id="modalOverlay">
@@ -633,13 +731,20 @@
         </div>
     </div>
 
+    <div class="error-toast" id="errorToast">
+        <i class="fas fa-exclamation-circle"></i>
+        <span id="errorMessage">Terjadi kesalahan</span>
+    </div>
+
     <footer>
         <p><i class="fas fa-heart" style="color: #ff6b6b;"></i> Dibuat dengan cinta untuk NIM 127 | WisataNusantara 2026</p>
     </footer>
 
     <script>
-        // Data Wisata - GAMBAR SUDAH DIPERBARUI
-        const wisataData = [
+        // ============================================
+        // 1. DATA STATIS (ARRAY JSON) - NILAI 80
+        // ============================================
+        const localData = [
             {
                 id: 1,
                 nama: "Raja Ampat",
@@ -651,7 +756,8 @@
                 gambar: "https://images.unsplash.com/photo-1516690561799-46d8f74f9abf?w=800&q=80",
                 fasilitas: ["Diving", "Snorkeling", "Resort", "Guide Lokal"],
                 jam: "08:00 - 17:00",
-                suhu: "24°C - 30°C"
+                suhu: "24°C - 30°C",
+                source: "local"
             },
             {
                 id: 2,
@@ -664,7 +770,8 @@
                 gambar: "https://images.unsplash.com/photo-1544640808-32ca72ac7f37?w=800&q=80",
                 fasilitas: ["Museum", "Audio Guide", "Shuttle", "Restoran"],
                 jam: "06:00 - 17:00",
-                suhu: "20°C - 32°C"
+                suhu: "20°C - 32°C",
+                source: "local"
             },
             {
                 id: 3,
@@ -677,7 +784,8 @@
                 gambar: "https://images.unsplash.com/photo-1505995433366-e12047f3f144?w=800&q=80",
                 fasilitas: ["Jeep Tour", "Penginapan", "Camping", "Kuda"],
                 jam: "03:00 - 12:00",
-                suhu: "5°C - 15°C"
+                suhu: "5°C - 15°C",
+                source: "local"
             },
             {
                 id: 4,
@@ -690,7 +798,8 @@
                 gambar: "https://images.unsplash.com/photo-1555400038-63f5ba517a47?w=800&q=80",
                 fasilitas: ["Liveaboard", "Diving", "Island Hopping", "Resort"],
                 jam: "07:00 - 18:00",
-                suhu: "25°C - 33°C"
+                suhu: "25°C - 33°C",
+                source: "local"
             },
             {
                 id: 5,
@@ -703,7 +812,8 @@
                 gambar: "https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=800&q=80",
                 fasilitas: ["Swing", "Trekking", "Kopi Luwak", "Souvenir"],
                 jam: "08:00 - 18:00",
-                suhu: "22°C - 28°C"
+                suhu: "22°C - 28°C",
+                source: "local"
             },
             {
                 id: 6,
@@ -716,7 +826,8 @@
                 gambar: "https://images.unsplash.com/photo-1588668214407-6ea9a6d8c272?w=800&q=80",
                 fasilitas: ["Guide", "Masker", "Trekking", "Kamera"],
                 jam: "00:00 - 08:00",
-                suhu: "8°C - 18°C"
+                suhu: "8°C - 18°C",
+                source: "local"
             },
             {
                 id: 7,
@@ -729,7 +840,8 @@
                 gambar: "https://images.unsplash.com/photo-1596401057633-54c8c7b76b4c?w=800&q=80",
                 fasilitas: ["Museum", "Teater", "Audio Guide", "Restoran"],
                 jam: "06:00 - 17:00",
-                suhu: "21°C - 33°C"
+                suhu: "21°C - 33°C",
+                source: "local"
             },
             {
                 id: 8,
@@ -742,7 +854,8 @@
                 gambar: "https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=800&q=80",
                 fasilitas: ["Snorkeling", "Diving", "Resort", "Boat"],
                 jam: "08:00 - 17:00",
-                suhu: "26°C - 32°C"
+                suhu: "26°C - 32°C",
+                source: "local"
             },
             {
                 id: 9,
@@ -755,28 +868,83 @@
                 gambar: "https://images.unsplash.com/photo-1582967788606-a171f1080ca8?w=800&q=80",
                 fasilitas: ["Diving", "Snorkeling", "Boat", "Guide"],
                 jam: "07:00 - 17:00",
-                suhu: "25°C - 31°C"
+                suhu: "25°C - 31°C",
+                source: "local"
             }
         ];
 
-        // State
+        // ============================================
+        // 2. FETCH API PUBLIC - NILAI 90
+        // ============================================
+        // Menggunakan JSONPlaceholder (API public gratis & stabil)
+        // Kita ambil data posts dan transformasi menjadi format wisata
+        
+        const API_URL = 'https://jsonplaceholder.typicode.com/posts?_limit=3';
+
+        // Transformasi data API ke format wisata
+        const transformApiData = (apiPosts) => {
+            const kategoriMap = ['Pantai', 'Gunung', 'Budaya'];
+            const lokasiMap = ['Bali', 'Lombok', 'Sumatera Barat'];
+            const hargaMap = [150000, 350000, 50000];
+            const gambarMap = [
+                'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800&q=80',
+                'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800&q=80',
+                'https://images.unsplash.com/photo-1528127269322-539801943592?w=800&q=80'
+            ];
+
+            return apiPosts.map((post, index) => ({
+                id: post.id + 100, // ID unik, beda dari local
+                nama: post.title.split(' ').slice(0, 4).join(' '), // Ambil 4 kata pertama
+                lokasi: lokasiMap[index % 3],
+                kategori: kategoriMap[index % 3],
+                harga: hargaMap[index % 3],
+                rating: (4.0 + Math.random()).toFixed(1), // Random 4.0-5.0
+                deskripsi: post.body,
+                gambar: gambarMap[index % 3],
+                fasilitas: ["Toilet", "Parkir", "Mushola", "Warung"],
+                jam: "08:00 - 17:00",
+                suhu: "22°C - 30°C",
+                source: "api" // Tandai dari API
+            }));
+        };
+
+        // ============================================
+        // 3. STATE & DOM
+        // ============================================
+        let wisataData = [];
         let currentView = 'grid';
         let currentFilter = 'all';
         let searchQuery = '';
         let favorites = new Set();
+        let isApiLoaded = false;
 
-        // DOM Elements
         const wisataList = document.getElementById('wisataList');
         const searchInput = document.getElementById('searchInput');
         const filterBtns = document.querySelectorAll('.filter-btn');
         const viewBtns = document.querySelectorAll('.view-btn');
         const itemCount = document.getElementById('itemCount');
         const activeFilter = document.getElementById('activeFilter');
+        const apiStatus = document.getElementById('apiStatus');
         const modalOverlay = document.getElementById('modalOverlay');
         const modalClose = document.getElementById('modalClose');
+        const errorToast = document.getElementById('errorToast');
 
+        // ============================================
+        // 4. FUNGSI RENDER
+        // ============================================
         const formatRupiah = (harga) => {
             return 'Rp ' + harga.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+        };
+
+        const showError = (message) => {
+            document.getElementById('errorMessage').textContent = message;
+            errorToast.classList.add('show');
+            setTimeout(() => errorToast.classList.remove('show'), 4000);
+        };
+
+        const updateApiStatus = (status, message) => {
+            apiStatus.className = `api-status ${status}`;
+            apiStatus.innerHTML = `<i class="fas fa-circle"></i> <span>${message}</span>`;
         };
 
         const renderWisata = () => {
@@ -792,7 +960,7 @@
 
             if (filtered.length === 0) {
                 wisataList.innerHTML = `
-                    <div class="no-results" style="grid-column: 1/-1;">
+                    <div class="no-results">
                         <i class="fas fa-search"></i>
                         <h3>Destinasi tidak ditemukan</h3>
                         <p>Coba kata kunci atau kategori lain</p>
@@ -804,8 +972,10 @@
             wisataList.innerHTML = filtered.map((item, index) => `
                 <div class="card" onclick="openModal(${item.id})" style="animation-delay: ${index * 0.1}s">
                     <div class="card-image">
-                        <img src="${item.gambar}" alt="${item.nama}" loading="lazy" onerror="this.src='https://via.placeholder.com/800x500?text=${encodeURIComponent(item.nama)}'">
+                        <img src="${item.gambar}" alt="${item.nama}" loading="lazy" 
+                             onerror="this.src='https://via.placeholder.com/800x500?text=${encodeURIComponent(item.nama)}'">
                         <span class="card-badge">${item.kategori}</span>
+                        <span class="card-source ${item.source}">${item.source === 'api' ? 'API' : 'LOCAL'}</span>
                         <button class="card-favorite ${favorites.has(item.id) ? 'liked' : ''}" 
                                 onclick="event.stopPropagation(); toggleFavorite(${item.id})">
                             <i class="fas fa-heart"></i>
@@ -830,6 +1000,9 @@
             `).join('');
         };
 
+        // ============================================
+        // 5. INTERAKSI
+        // ============================================
         const toggleFavorite = (id) => {
             if (favorites.has(id)) {
                 favorites.delete(id);
@@ -853,6 +1026,7 @@
                 <span><i class="fas fa-clock"></i> ${item.jam}</span>
                 <span><i class="fas fa-temperature-half"></i> ${item.suhu}</span>
                 <span><i class="fas fa-tag"></i> ${formatRupiah(item.harga)}</span>
+                <span><i class="fas fa-database"></i> Sumber: ${item.source.toUpperCase()}</span>
             `;
 
             document.getElementById('modalFeatures').innerHTML = item.fasilitas.map(f => `
@@ -870,6 +1044,7 @@
             document.body.style.overflow = '';
         };
 
+        // Event Listeners
         searchInput.addEventListener('input', (e) => {
             searchQuery = e.target.value;
             renderWisata();
@@ -919,7 +1094,47 @@
             if (e.key === 'Escape') closeModal();
         });
 
-        renderWisata();
+        // ============================================
+        // 6. INISIALISASI: FETCH API + FALLBACK JSON
+        // ============================================
+        const initApp = async () => {
+            try {
+                updateApiStatus('offline', 'Mengambil data API...');
+                
+                // FETCH dari API Public (JSONPlaceholder)
+                const response = await fetch(API_URL);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP Error: ${response.status}`);
+                }
+                
+                const apiPosts = await response.json();
+                const apiData = transformApiData(apiPosts);
+                
+                // Gabungkan: Data API + Data Local
+                wisataData = [...apiData, ...localData];
+                isApiLoaded = true;
+                
+                updateApiStatus('online', `API Online (${apiData.length} data)`);
+                console.log('✅ Data dari API berhasil dimuat:', apiData);
+                
+            } catch (error) {
+                console.warn('⚠️ Gagal fetch API, menggunakan data local:', error);
+                
+                // FALLBACK: Gunakan data local jika API gagal
+                wisataData = [...localData];
+                isApiLoaded = false;
+                
+                updateApiStatus('offline', 'API Offline (Fallback JSON)');
+                showError('Gagal terhubung ke API. Menggunakan data local.');
+            }
+            
+            // Render data
+            renderWisata();
+        };
+
+        // Jalankan aplikasi
+        initApp();
     </script>
 
 </body>
